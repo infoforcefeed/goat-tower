@@ -1,2 +1,2 @@
-sqlalchemy
 psycopg2
+sqlalchemy
