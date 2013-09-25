@@ -1,0 +1,35 @@
+- name: "Test Location #1"
+  id: 1
+  commands:
+    - regex:
+        - look
+      code:
+        - display:
+          - "Location #1"
+    - regex:
+        - north
+      code:
+        - display:
+          - You walk north
+        - update:
+          - "@origin"
+          - location
+          - 2
+
+- name: "Test Location #2"
+  id: 2
+  commands:
+    - regex:
+        - look
+      code:
+        - display:
+          - "Location #2"
+    - regex:
+        - south
+      code:
+        - display:
+          - You walk south
+        - update:
+          - "@origin"
+          - location
+          - 1
