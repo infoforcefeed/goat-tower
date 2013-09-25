@@ -49,4 +49,4 @@ def handle_text(actor_id, text):
 def run_code(actor_id, command_id):
     codes = session.query(Code).filter(Command.id == command_id).all()
     for code in codes:
-        api.run_method(code.actor_id, code.method, code.args)
+        api.run_method(actor_id, code.method, code.args)
