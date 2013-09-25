@@ -4,16 +4,17 @@
     - regex:
         - look
       code:
-        - display:
+        - send_text:
+          - "@origin"
           - "Location #1"
     - regex:
         - north
       code:
-        - display:
-          - You walk north
-        - update:
+        - send_text:
           - "@origin"
-          - location
+          - You walk north
+        - update_location:
+          - "@origin"
           - 2
 
 - name: "Test Location #2"
@@ -22,16 +23,17 @@
     - regex:
         - look
       code:
-        - display:
+        - send_text:
+          - "@origin"
           - "Location #2"
     - regex:
         - south
       code:
-        - display:
-          - You walk south
-        - update:
+        - send_text:
           - "@origin"
-          - location
+          - You walk south
+        - update_location:
+          - "@origin"
           - 1
 
 - name: "nijotz"
