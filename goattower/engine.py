@@ -43,6 +43,9 @@ def handle_text(actor_id, text):
         if match:
             run_code(actor_id, command.id)
 
+    # Things at current location
+    # TODO
+
 def run_code(actor_id, command_id):
     codes = session.query(Code).filter(Command.id == command_id).all()
     for code in codes:
