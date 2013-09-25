@@ -1,50 +1,65 @@
 import api
 import re
 from sqlalchemy.orm import aliased, sessionmaker
+from sqlalchemy.sql import bindparam
 from models import engine, Actor, Code, Command
 
 # start session
 Session = sessionmaker(bind=engine)
 session = Session()
 
+# compile queries
+command_queries = {}
+command_queries['character'] = \
+    session.query(Command).\
+    filter(Command.actor_id == bindparam('actor_id'))
+
+command_queries['children'] = \
+    session.query(Actor, Command).\
+    filter(Actor.id == bindparam('actor_id')).\
+    join(Actor.parent, aliased=True).\
+    filter(Command.actor_id == Actor.id)
+
+location = aliased(Actor)
+command_queries['location'] = \
+    session.query(Command).\
+    join(location).\
+    join(Actor, location.id == Actor.parent_id).\
+    filter(Actor.id == bindparam('actor_id'))
+
+location = aliased(Actor)
+children = aliased(Actor)
+command_queries['location_children'] = \
+    session.query(Command).\
+    join(location).\
+    join(Actor, location.id == Actor.parent_id).\
+    join(children, location.id == children.parent_id).\
+    filter(Actor.id == bindparam('actor_id')).\
+    filter(Command.actor_id == children.id)
+
+command_precedence = ['character', 'children', 'location', 'location_children']
+
+
 def handle_text(actor_id, text):
+    # TODO: have some game commands
+    # For now assume all text is intended for a game object
+    for command_type in command_precedence:
+        commands = command_queries[command_type].params(actor_id=actor_id).all()
+        matches = []
+        for command in commands:
+            regex = re.compile(command.regex)
+            if regex.match(text):
+                matches.append(command)
 
-    # TODO: handle multiple matches
-    # TODO: remove copypasta
-
-    # Look for commands on current character
-    commands = session.query(Command).filter(Command.actor_id == actor_id).all()
-    for command in commands:
-        regex = re.compile(command.regex)
-        match = regex.match(text)
-        if match:
+        if len(matches) > 1:
+            print 'Ambiguous command'
+            return
+        elif len(matches) == 1:
             run_code(actor_id, command.id)
+            return
 
-    # Children of character
-    commands = session.query(Actor, Command).\
-        filter(Actor.id == actor_id).\
-        join(Actor.parent, aliased=True).\
-        filter(Command.actor_id == Actor.id).all()
-    for command in commands:
-        regex = re.compile(command.regex)
-        match = regex.match(text)
-        if match:
-            run_code(actor_id, command.id)
+    print 'Huh?'
 
-    # Location
-    location = aliased(Actor)
-    commands = session.query(Command).\
-        join(location).\
-        join(Actor, location.id == Actor.parent_id).\
-        filter(Actor.id == actor_id).all()
-    for command in commands:
-        regex = re.compile(command.regex)
-        match = regex.match(text)
-        if match:
-            run_code(actor_id, command.id)
-
-    # Things at current location
-    # TODO
 
 def run_code(actor_id, command_id):
     codes = session.query(Code).filter(Command.id == command_id).all()
