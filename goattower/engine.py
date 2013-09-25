@@ -7,7 +7,7 @@ from models import engine, Actor, Code, Command
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def handle_text(actor_id, text):   
+def handle_text(actor_id, text):
 
     # TODO: handle multiple matches
     # TODO: remove copypasta
