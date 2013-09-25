@@ -55,13 +55,12 @@ def handle_text(actor_id, text):
             print 'Ambiguous command'
             return
         elif len(matches) == 1:
-            run_code(actor_id, command.id)
+            run_code(actor_id, command)
             return
 
     print 'Huh?'
 
 
-def run_code(actor_id, command_id):
-    codes = session.query(Code).filter(Command.id == command_id).all()
-    for code in codes:
+def run_code(actor_id, command):
+    for code in command.code:
         api.run_method(actor_id, code.method, code.args)
