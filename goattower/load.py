@@ -50,8 +50,8 @@ parser_map = {
 }
 
 def main():
-    import argparse # TODO: eventually..
-    argparse
+    import argparse
+    argparse # TODO: eventually..
 
     data_file = sys.argv[1]
     file_type = sys.argv[2]
