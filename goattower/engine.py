@@ -2,7 +2,7 @@ import api
 import re
 from sqlalchemy.orm import aliased, sessionmaker
 from sqlalchemy.sql import bindparam
-from models import engine, Actor, Code, Command
+from models import engine, Actor, Command, PlayerText
 
 # start session
 Session = sessionmaker(bind=engine)
@@ -60,6 +60,16 @@ def handle_text(actor_id, text):
 
     print 'Huh?'
 
+
+def get_text(actor_id):
+    text_objs = session.query(PlayerText).\
+        filter(PlayerText.actor_id == actor_id)
+    text = []
+    for text_obj in text_objs:
+        text.append(text_obj.text)
+        session.delete(text_obj)
+    session.commit()
+    return text
 
 def run_code(actor_id, command):
     for code in command.code:
