@@ -1,6 +1,5 @@
 import json
 import sys
-import yaml
 from sqlalchemy.orm import sessionmaker
 import models
 
@@ -42,6 +41,7 @@ def load_json(json_str):
     load(json.loads(json_str))
 
 def load_yaml(yaml_str):
+    import yaml
     load(yaml.load(yaml_str))
 
 parser_map = {
