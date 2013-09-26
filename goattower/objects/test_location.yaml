@@ -6,7 +6,9 @@
       code:
         - send_text:
           - "@origin"
-          - "Location #1"
+          - >
+            "You are in a canyon.  The cave that brought you to this world has
+            collapsed.  To north you see a tower."
     - regex:
         - north
       code:
@@ -25,7 +27,10 @@
       code:
         - send_text:
           - "@origin"
-          - "Location #2"
+          - >
+            "To the south is a path to a canyon.  A great tower stands to the
+            north of you.  You squint to try and make out who or what is on the
+            tower.  You think you see... goats??"
     - regex:
         - south
       code:
