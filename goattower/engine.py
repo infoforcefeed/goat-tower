@@ -55,7 +55,7 @@ def handle_text(actor_id, text):
             print 'Ambiguous command'
             return
         elif len(matches) == 1:
-            run_code(actor_id, command)
+            run_code(actor_id, matches[0])
             return
 
     print 'Huh?'
