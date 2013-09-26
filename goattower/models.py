@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('postgresql+psycopg2://localhost:5432/goattower', echo=True)
+engine = create_engine('postgresql+psycopg2://localhost:5432/goattower')
 
 Base = declarative_base()
 
