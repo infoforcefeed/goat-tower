@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
@@ -77,6 +77,23 @@ class Code(Base):
     def __init__(self, method, args):
         self.method = method
         self.args = args
+
+
+# Currently sending text to a user would involve a client/server setup. I don't
+# want to do all that work just to see if the proof of concept will work. So,
+# to send text to a user, text is put in this table which is retreived by the
+# cli.py module
+class PlayerText(Base):
+    __tablename__ = 'playertext'
+
+    id = Column(Integer, primary_key=True)
+    actor_id = Column(Integer, ForeignKey('actor.id'))
+    actor = relationship('Actor', backref='text')
+    text = Column(Text)
+
+    def __init__(self, actor_id, text):
+        self.actor_id = actor_id
+        self.text = text
 
 
 Base.metadata.create_all(engine)
