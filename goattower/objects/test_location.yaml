@@ -5,7 +5,7 @@
         - look
       code:
         - send_text:
-          - "@origin"
+          - "{{origin}}"
           - >
             "You are in a canyon.  The cave that brought you to this world has
             collapsed.  To north you see a tower."
@@ -13,10 +13,10 @@
         - north
       code:
         - send_text:
-          - "@origin"
+          - "{{origin}}"
           - You walk north
         - update_location:
-          - "@origin"
+          - "{{origin}}"
           - 2
 
 - name: "Test Location #2"
@@ -26,22 +26,41 @@
         - look
       code:
         - send_text:
-          - "@origin"
+          - "{{origin}}"
           - >
             "To the south is a path to a canyon.  A great tower stands to the
             north of you.  You squint to try and make out who or what is on the
-            tower.  You think you see... goats??"
+            tower.  You think you see... goats??  You realize there is a goat
+            under a tree staring at you."
     - regex:
         - south
       code:
         - send_text:
-          - "@origin"
+          - "{{origin}}"
           - You walk south
         - update_location:
-          - "@origin"
+          - "{{origin}}"
           - 1
 
 - name: "nijotz"
   id: 3
   parent_id: 1
   is_player: True
+  commands:
+    - regex:
+        - "^say (?P<text>(.*)) to (?P<actor_name>(.*))$"
+      code:
+        - send_text:
+          - "{{match.actor_name|get_actor_id_by_name}}"
+          - "{{match.text}}"
+
+- name: "goat01"
+  id: 4
+  parent_id: 2
+  command:
+    - regex:
+        - "(?i)^(hi|hello)$"
+      code:
+        - send_text:
+          - "{{origin}}"
+          - "HELLO THERE! I AM GOAT01. I RUN ON GRASS."

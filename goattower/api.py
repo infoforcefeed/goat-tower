@@ -1,12 +1,13 @@
 import json
+from jinja2 import Template
 from sqlalchemy.orm import sessionmaker
 from models import engine, Actor, PlayerText
 
 
-def run_method(actor_id, method_name, args_string):
-    args = json.loads(args_string)
-    args = map(lambda x: actor_id if x == '@origin' else x, args)
-    getattr(api, method_name)(*args)
+def run_method(method_name, args_string, context):
+    template = Template(args_string)
+    args_json_string = template.render(context)
+    getattr(api, method_name)(*json.loads(args_json_string))
 
 
 class API(object):

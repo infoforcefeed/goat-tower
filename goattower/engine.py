@@ -47,15 +47,16 @@ def handle_text(actor_id, text):
         commands = command_queries[command_type].params(actor_id=actor_id).all()
         matches = []
         for command in commands:
-            regex = re.compile(command.regex)
-            if regex.match(text):
-                matches.append(command)
+            regex = re.compile(command.regex).match
+            match = regex(text)
+            if match:
+                matches.append((command, match))
 
         if len(matches) > 1:
             print 'Ambiguous command'
             return
         elif len(matches) == 1:
-            run_code(actor_id, matches[0])
+            run_code(actor_id, *matches[0])
             return
 
     print 'Huh?'
@@ -71,6 +72,10 @@ def get_text(actor_id):
     session.commit()
     return text
 
-def run_code(actor_id, command):
+def run_code(actor_id, command, match):
+    context = {
+        'origin': actor_id,
+        'match': match
+    }
     for code in command.code:
-        api.run_method(actor_id, code.method, code.args)
+        api.run_method(code.method, code.args, context)
