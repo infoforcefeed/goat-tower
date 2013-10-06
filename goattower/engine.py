@@ -58,7 +58,6 @@ def handle_text(actor_id, text):
         elif len(matches) == 1:
             run_code(actor_id, *matches[0])
             return
-
     print 'Huh?'
 
 
@@ -75,7 +74,7 @@ def get_text(actor_id):
 def run_code(actor_id, command, match):
     context = {
         'origin': actor_id,
-        'match': match
+        'match': match.groupdict()
     }
     for code in command.code:
         api.run_method(code.method, code.args, context)

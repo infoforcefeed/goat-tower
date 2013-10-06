@@ -57,7 +57,7 @@
 - name: "goat01"
   id: 4
   parent_id: 2
-  command:
+  commands:
     - regex:
         - "(?i)^(hi|hello)$"
       code:
