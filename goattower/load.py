@@ -11,7 +11,6 @@ def load(data):
     for actor in data:
         new_actor = models.Actor(name=actor['name'])
         new_actor.id = actor['id']
-        new_actor.is_player = actor.get('is_player', False)
         new_actor.parent_id = actor.get('parent_id', None)
         session.add(new_actor)
 
