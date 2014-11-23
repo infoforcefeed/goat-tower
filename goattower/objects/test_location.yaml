@@ -44,4 +44,3 @@
 - name: "nijotz"
   id: 3
   parent_id: 1
-  is_player: True
