@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
@@ -9,6 +9,19 @@ engine = create_engine('postgresql+psycopg2://localhost:5432/goattower')
 Base = declarative_base()
 
 
+class User(Base):
+
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    actor_id = Column(Integer, ForeignKey('actor.id'))
+    actor = relationship('Actor', backref='user')
+
+    def __init__(self, name, actor=None):
+        self.name = name
+
+
 class Actor(Base):
 
     __tablename__ = 'actor'
@@ -16,14 +29,16 @@ class Actor(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     parent_id = Column(Integer, ForeignKey('actor.id'))
-    is_player = Column(Boolean)
 
     parent = relationship('Actor', primaryjoin=('Actor.parent_id == Actor.id'),
                           uselist=False)
 
-    def __init__(self, name, is_player=False):
+    def __init__(self, name):
         self.name = name
-        self.is_player = is_player
+
+    @property
+    def is_player(self):
+        return self.user is not None
 
 
 class ActorAttribute(Base):

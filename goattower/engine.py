@@ -1,8 +1,8 @@
-import api
 import re
 from sqlalchemy.orm import aliased, sessionmaker
 from sqlalchemy.sql import bindparam
 from models import engine, Actor, Command, PlayerText
+from api import api, run_method
 
 # start session
 Session = sessionmaker(bind=engine)
@@ -53,12 +53,13 @@ def handle_text(actor_id, text):
                 matches.append((command, match))
 
         if len(matches) > 1:
-            print 'Ambiguous command'
+            api.send_text(actor_id, 'Ambiguous command')
             return
         elif len(matches) == 1:
             run_code(actor_id, *matches[0])
             return
-    print 'Huh?'
+
+    api.send_text(actor_id, 'Huh?')
 
 
 def get_text(actor_id):
@@ -77,4 +78,4 @@ def run_code(actor_id, command, match):
         'match': match.groupdict()
     }
     for code in command.code:
-        api.run_method(code.method, code.args, context)
+        run_method(actor_id, code.method, code.args)
